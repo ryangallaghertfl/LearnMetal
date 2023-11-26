@@ -9,6 +9,58 @@
 //we can write float2 instead of metal::float2 for position and half4 instead of metal::half4 for color.
 using namespace metal;
 
+//float2 is a vector of 2 floating-point numbers — that is, it stores two separate numbers together in the one type. Here, it’s used to represent the x and y coordinates of on-screen pixels (accessible through dot-syntax)
+
+//half4 is a vector of 4 half-width floating-point numbers. Half-width means their bits are stored in half as much memory as a float (this is the opposite of a double). This more lightweight type is used used to store the r, g, b, and a values for a color, which can also be accessed via dot-syntax.
+
+
+[[ stitchable ]]                            // 1
+half4 colorOne(                          // 2
+    float2 position,                        // 3
+    half4 color                             // 4
+) {
+    return color;                           // 5
+}
+
+/*
+ 1. The [[ stitchable ]] declaration does two things. Firstly, it tells the compiler to make the function visible to the Metal Framework API, allowing us to use it in SwiftUI. Secondly, it allows Metal to stitch shaders together at runtime. This means the shader code, and SwiftUI view modifiers themselves, can be used to compose multiple shader effects together in a performant manner on the same views.
+ 2. half4 color is the return type and our function name. This is the standard function syntax for C-family languages.
+ 3. float2 position inputs the coordinates of the pixel this shader function is operating on.
+ 4. The half4 color argument is the starting color of the pixel on which this shader is operating.
+ 5. return color; is the return statement — it is the resulting color of the pixel at position. Here, we are just returning the original color without changing anything.
+
+ */
+
+//For a shader function to act as a color filter it must have a function signature matching: [[ stitchable ]] half4 name(float2 position, half4 color, args...). The function should return the modified color value.
+
+[[ stitchable ]]
+half4 colorTwo(
+    float2 position,
+    half4 color
+) {
+    return half4(0.0, 128.0, 255.0, 1.0);
+}
+
+[[ stitchable ]]
+half4 colorRedGradient(
+    float2 position,
+    half4 color
+) {
+    return half4(position.x/255.0, 0.0, 0.0, 1.0);
+}
+
+//We get red gradient effect because position.x/255.0 begins at zero, then happily increases by the x position of each pixel. Once the shader gets 255 pixels along, position.x/255.0 resolves to 1.0, which is plain red. The max value of the red component is 1.0, so everything past 255 pixels stays red
+
+[[ stitchable ]]
+half4 colorRedGreenXYGradient(
+    float2 position,
+    half4 color
+) {
+    return half4(position.x/255.0, position.y/255.0, 0.0, 1.0);
+}
+
+//This gradient modulates red and green components of colour by horizontal X and vertical Y positions. However it will look very different on different screen sizes due to the shader working with discrete numbers of pixels.
+
 [[ stitchable ]]
 half4 color(
     float2 position,
@@ -16,6 +68,8 @@ half4 color(
 ) {
     return half4(position.x/255.0, position.y/255.0, 0.0, 1.0);
 }
+
+
 
 [[ stitchable ]]
 half4 sizeAwareColor(
