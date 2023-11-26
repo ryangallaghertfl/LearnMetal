@@ -25,8 +25,9 @@ extension View {
 struct ColorShader: ViewModifier {
     
     func body(content: Content) -> some View {
-        content
-            .colorEffect(ShaderLibrary.color())
+        content.colorEffect(ShaderLibrary.color()) // colorEffect modifier takes a Shader as an argument. This is a reference to a function in a shader library, and also accepts any arguments
+        
+        //ShaderLibrary itself is another struct that uses dynamic member lookup to locate a ShaderFunction that you specify in your .metal files.
     }
 }
 

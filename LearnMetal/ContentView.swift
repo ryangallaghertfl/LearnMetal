@@ -12,7 +12,8 @@ struct ContentView: View {
     var body: some View {
         Color.white
             .edgesIgnoringSafeArea(.all)
-            .perlinNoiseShader()
+            //.perlinNoiseShader()
+            .colorShader()
     }
 }
 

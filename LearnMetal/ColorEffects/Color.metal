@@ -4,8 +4,9 @@
 //
 //  Created by Jacob Bartlett on 06/11/2023.
 //
-
+// import the Metal Standard Library, which contains many commonly used mathematical operations for shaders.
 #include <metal_stdlib>
+//we can write float2 instead of metal::float2 for position and half4 instead of metal::half4 for color.
 using namespace metal;
 
 [[ stitchable ]]
