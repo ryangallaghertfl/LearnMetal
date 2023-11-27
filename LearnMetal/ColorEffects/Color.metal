@@ -69,7 +69,15 @@ half4 color(
     return half4(position.x/255.0, position.y/255.0, 0.0, 1.0);
 }
 
+[[ stitchable ]]
+half4 sizeAwareColorRedBlack(float2 position, half4 color, float2 size) {
+    return half4(position.x/size.x, 0.0, 0.0, 1.0);
+}    //each pixel’s red colour component is calculated by its relative horizontal position on-screen. For positions where x=0, the red component is 0, giving us a black colour along the leading edge. For positions where x=500, if the full horizontal size of the view is 1000 pixels, then position.x/size.x gives us 500/1000 which equals 0.5. This is the dark red in the middle of the screen. For positions where x is equal to the full horizontal size — that is, the trailing edge, then position.x/size.x is just 1, giving the full red colour.
 
+[[ stitchable ]]
+half4 sizeAwareColorRedGreen(float2 position, half4 color, float2 size) {
+    return half4(position.x/size.x, position.y/size.y, 0.0, 1.0);
+} //Now the red colour component varies horizontally, and the green colour component varies vertically. As you can see, the key to learning shaders is taking a simple mathematical effect and layering on more complexity, bit by bit.
 
 [[ stitchable ]]
 half4 sizeAwareColor(
@@ -78,7 +86,7 @@ half4 sizeAwareColor(
     float2 size
 ) {
     return half4(position.x/size.x, position.y/size.y, position.x/size.y, 1.0);
-}
+} //Red, green, and blue gradient created by modulating RGB color values with position and size, giving a pastel effect
 
 float oscillate(float f) {
     return 0.5 * (sin(f) + 1);

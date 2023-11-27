@@ -22,6 +22,8 @@ extension View {
     }
 }
 
+//to make the colorEffect shader more smooth, and, vitally, to ensure the behaviour of full-screen shaders is similar on all screen sizes, we need to know the geometry of the view which we’re modifying.
+
 struct ColorShader: ViewModifier {
     
     func body(content: Content) -> some View {
@@ -31,13 +33,15 @@ struct ColorShader: ViewModifier {
     }
 }
 
+//shader function has the standard colorEffect args, plus the new size argument to play with
 struct SizeAwareColorShader: ViewModifier {
-    
+    // The new visualEffect modifier is designed to give access to layout information such as size
     func body(content: Content) -> some View {
         content.visualEffect { content, proxy in
             content
                 .colorEffect(ShaderLibrary.sizeAwareColor(
                     .float2(proxy.size)
+                    //we're using size as an argument in our shader. Since it’s two-dimensional information, it’s stored as a float2
                 ))
         }
     }

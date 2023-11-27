@@ -13,7 +13,9 @@ struct ContentView: View {
         Color.white
             .edgesIgnoringSafeArea(.all)
             //.perlinNoiseShader()
-            .colorShader()
+            //.colorShader()
+            .sizeAwareColorShader()
+            
     }
 }
 
